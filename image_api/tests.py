@@ -1,5 +1,6 @@
 import base64
 import io
+import json
 
 from PIL import Image
 
@@ -15,7 +16,7 @@ def _sample_data_url() -> str:
 def test_get_resolution(client):
     response = client.post(
         "/get/resolution",
-        data={"image": _sample_data_url()},
+        data=json.dumps({"image": _sample_data_url()}),
         content_type="application/json",
     )
 
