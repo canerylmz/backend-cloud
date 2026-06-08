@@ -22,3 +22,16 @@ def test_get_resolution(client):
 
     assert response.status_code == 200
     assert response.json()["resolution"] == {"width": 3, "height": 2}
+
+
+def test_convert_grayscale(client):
+    response = client.post(
+        "/convert/grayscale",
+        data=json.dumps({"image": _sample_data_url()}),
+        content_type="application/json",
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["image"].startswith("data:image/png;base64,")
+    assert "Converted to grayscale" in body["info"]

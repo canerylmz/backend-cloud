@@ -22,6 +22,13 @@ def _decode_image(data_url: str) -> Image.Image:
         raise ValueError("Invalid image payload.") from exc
 
 
+def _encode_png(image: Image.Image) -> str:
+    buffer = io.BytesIO()
+    image.save(buffer, format="PNG")
+    encoded = base64.b64encode(buffer.getvalue()).decode("utf-8")
+    return f"data:image/png;base64,{encoded}"
+
+
 def _json_body(request: HttpRequest) -> dict:
     try:
         return json.loads(request.body.decode("utf-8"))
@@ -49,5 +56,25 @@ def get_resolution(request: HttpRequest) -> JsonResponse:
         {
             "info": f"{width} x {height}",
             "resolution": {"width": width, "height": height},
+        }
+    )
+
+
+@csrf_exempt
+@require_POST
+def convert_grayscale(request: HttpRequest) -> JsonResponse:
+    try:
+        body = _json_body(request)
+        image = _decode_image(body.get("image", ""))
+    except ValueError as exc:
+        return JsonResponse({"error": str(exc)}, status=400)
+
+    width, height = image.size
+    grayscale = image.convert("L").convert("RGB")
+    logger.info("grayscale request received: width=%s height=%s", width, height)
+    return JsonResponse(
+        {
+            "image": _encode_png(grayscale),
+            "info": f"Converted to grayscale. Original resolution: {width} x {height}",
         }
     )

@@ -6,6 +6,7 @@ Django backend server 2 for RoboMunch Task 2.
 
 ```text
 POST /get/resolution
+POST /convert/grayscale
 ```
 
 Both endpoints accept:
@@ -16,7 +17,7 @@ Both endpoints accept:
 }
 ```
 
-`/get/resolution` returns image dimensions.
+`/get/resolution` returns image dimensions. `/convert/grayscale` returns a grayscale image.
 
 ## Run Locally
 
@@ -50,6 +51,7 @@ The logs include lines like:
 
 ```text
 resolution request received: width=512 height=232
+grayscale request received: width=512 height=232
 ```
 
 ## GitHub Secrets For CD
