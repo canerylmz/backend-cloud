@@ -1,0 +1,8 @@
+services:
+  backend-cloud:
+    build: .
+    image: backend-cloud:local
+    ports:
+      - "8001:8000"
+    environment:
+      DJANGO_ALLOWED_HOSTS: "*"
